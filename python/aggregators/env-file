@@ -1,0 +1,4 @@
+# Mongo parameters
+
+DB_HOST=192.168.50.5
+DB_NAME=house_dev
