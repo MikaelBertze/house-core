@@ -28,7 +28,7 @@ def aggregate(start_date, stop_date):
 
 def write_to_db(start_utc: datetime, stop_utc: datetime):
     agg = aggregate(start_utc, stop_utc)
-    query = {'start': start_utc, 'stop': stop_utc}
+    query = {'start': start_utc}
     update = {'$set': {'start': start_utc,
                        'stop': stop_utc,
                        'duration_s': (stop_utc-start_utc).total_seconds(),
