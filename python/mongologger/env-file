@@ -1,0 +1,9 @@
+# Mongo parameters
+
+DB_HOST=192.168.50.5
+DB_NAME=house_dev
+
+# MQTT parameters
+MQTT_HOST=192.168.50.5
+MQTT_USER=hallondisp
+MQTT_PASSWD=disphallon
