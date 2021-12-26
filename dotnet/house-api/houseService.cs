@@ -1,5 +1,7 @@
 using MongoDB.Driver;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 using System.Linq;
 //using MoreLinq.Extensions
 
@@ -13,11 +15,27 @@ public class PowerInfo {
     public double MonthMax {get;set;}
     public DateTime MonthMaxHour {get;set;}
 
+    public double MonthMaxHighLoad {get;set;}
+    public DateTime MonthMaxHighLoadHour {get;set;}
+    
 }
 
+[BsonIgnoreExtraElements]
 public class Power {
-    public DateTime Dt {get;set;}
+
+    [BsonElement("start")]
+    public DateTime Start {get;set;}
+    public DateTime StartLocalTime => Start.ToLocalTime();
+    
+    [BsonElement("stop")]
+    private DateTime Stop {get;set;}
+    public DateTime StopLocalTime => Stop.ToLocalTime();
+    [BsonElement("duration_s")]
+    public double Duration_s {get;set;}
+    [BsonElement("consumption")]
     public double Consumption {get;set;}
+    [BsonElement("unit")]
+    public string Unit {get;set;}
 }
 
 public class HouseService
@@ -34,26 +52,31 @@ public class HouseService
         var now = DateTime.Now;
         var monthStart = new DateTime(now.Year, now.Month, 1);
         IMongoDatabase db = _mongoClient.GetDatabase("house");
-        var powerPerHour = db.GetCollection<BsonDocument>("power_per_hour");
-        var filter = Builders<BsonDocument>.Filter.Gte("start", monthStart.ToUniversalTime());
-        var docs = powerPerHour.Find(filter).ToList();
-        var powerDocs = docs.Select(x => new Power { Dt = x["start"].ToLocalTime(), Consumption = x["consumption"].AsDouble}).ToList();
-        var todayDocs = powerDocs.Where(x => x.Dt > dayStart);
-        var thisHour = todayDocs.SingleOrDefault(x => x.Dt.Hour == now.Hour);
-        var preHour = todayDocs.SingleOrDefault(x => x.Dt.Hour == (now - TimeSpan.FromHours(1)).Hour);
+        var powerPerHour = db.GetCollection<Power>("power_per_hour");
+        var powerDocs = powerPerHour.Find(x => x.Start >= monthStart.ToUniversalTime()).ToList();
+        var todayDocs = powerDocs.Where(x => x.StartLocalTime >= dayStart).ToList();
+        var thisHour = todayDocs.SingleOrDefault(x => x.StartLocalTime.Hour == now.Hour);
+        var preHour = todayDocs.SingleOrDefault(x => x.StartLocalTime.Hour == (now - TimeSpan.FromHours(1)).Hour);
         var maxMonth = powerDocs.MaxBy(x => x.Consumption);
         var todayMax = todayDocs.MaxBy(x => x.Consumption);
         
+        // high load
+        // mon - fri 0600-1800 CET
+        var highLoadDocs = powerDocs.Where(x => (int)x.StartLocalTime.DayOfWeek >= 1 && (int)x.StartLocalTime.DayOfWeek <= 6 && x.StartLocalTime.TimeOfDay.Hours >= 6 && x.StartLocalTime.TimeOfDay.Hours < 18);
+        var maxHighLoadMonth = highLoadDocs.MaxBy(x => x.Consumption);
+        
+
         return new PowerInfo() { 
             CurrentHour = thisHour.Consumption,
             Today = todayDocs.Sum(x => x.Consumption),
             PreviousHour = preHour.Consumption,
             TodayMax = todayMax.Consumption,
-            TodayMaxHour = todayMax.Dt,
+            TodayMaxHour = todayMax.StartLocalTime,
             MonthMax = maxMonth.Consumption,
-            MonthMaxHour = maxMonth.Dt
+            MonthMaxHour = maxMonth.StartLocalTime,
+            MonthMaxHighLoad = maxHighLoadMonth.Consumption,
+            MonthMaxHighLoadHour = maxHighLoadMonth.StartLocalTime
+            
         };
     }
-
-    
 }
