@@ -18,6 +18,17 @@ public class PowerInfo {
     public double MonthMaxHighLoad {get;set;}
     public DateTime MonthMaxHighLoadHour {get;set;}
     
+    public double CurrentAverage {get;set;}
+    public double HourPrognosis {get;set;}
+}
+
+[BsonIgnoreExtraElements]
+public class PowerRaw {
+    [BsonElement("ts")]
+    public DateTime Time {get;set;}
+    
+    [BsonElement("mean_effect")]
+    public double MeanEffect {get;set;}
 }
 
 [BsonIgnoreExtraElements]
@@ -65,6 +76,8 @@ public class HouseService
         var highLoadDocs = powerDocs.Where(x => (int)x.StartLocalTime.DayOfWeek >= 1 && (int)x.StartLocalTime.DayOfWeek <= 6 && x.StartLocalTime.TimeOfDay.Hours >= 6 && x.StartLocalTime.TimeOfDay.Hours < 18);
         var maxHighLoadMonth = highLoadDocs.MaxBy(x => x.Consumption);
         
+        //Prognosis
+        var currentAverage = AverageConsumption(60);
 
         return new PowerInfo() { 
             CurrentHour = thisHour.Consumption,
@@ -75,8 +88,18 @@ public class HouseService
             MonthMax = maxMonth.Consumption,
             MonthMaxHour = maxMonth.StartLocalTime,
             MonthMaxHighLoad = maxHighLoadMonth.Consumption,
-            MonthMaxHighLoadHour = maxHighLoadMonth.StartLocalTime
-            
+            MonthMaxHighLoadHour = maxHighLoadMonth.StartLocalTime,
+            CurrentAverage = currentAverage,
+            HourPrognosis = thisHour.Consumption + ((1 - DateTime.Now.Minute/60.0) * currentAverage) / 1000, 
         };
     }
+
+    private double AverageConsumption(int seconds){
+        var t = DateTime.Now - TimeSpan.FromSeconds(seconds);
+        IMongoDatabase db = _mongoClient.GetDatabase("house");
+        var power = db.GetCollection<PowerRaw>("power");
+        
+        var documents = power.Find(x => x.Time >= t).ToList();
+        return documents.Sum(x => x.MeanEffect) / documents.Count();
+   }
 }
