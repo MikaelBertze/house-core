@@ -90,7 +90,7 @@ public class HouseService
             MonthMaxHighLoad = maxHighLoadMonth.Consumption,
             MonthMaxHighLoadHour = maxHighLoadMonth.StartLocalTime,
             CurrentAverage = currentAverage,
-            HourPrognosis = thisHour.Consumption + ((1 - DateTime.Now.Minute/60.0) * currentAverage) / 1000, 
+            HourPrognosis = thisHour.Consumption + ((1 - DateTime.Now.Minute/60.0) * (currentAverage / 1000)),
         };
     }
 
