@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from utils import power_aggregator
+from utils import power_aggregator, water_aggregator
 
 now = datetime.utcnow()
 start = datetime.utcnow() - timedelta(days=360)
@@ -9,4 +9,5 @@ while start < datetime.utcnow():
     print(start)
     stop = start + timedelta(hours=1)
     power_aggregator.write_to_db(start, stop)
+    water_aggregator.write_to_db(start, stop)
     start += timedelta(hours=1)
