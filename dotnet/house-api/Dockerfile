@@ -1,4 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0
+RUN apt update && apt install tzdata -y
+ENV TZ="Europe/Stockholm"
 COPY . App/
 WORKDIR /App
 ENV DOTNET_EnableDiagnostics=0
