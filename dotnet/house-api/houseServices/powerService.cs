@@ -17,7 +17,7 @@ namespace HouseCore.HouseService
             var dayStart = DateTime.Today;
             var now = DateTime.Now;
             var monthStart = new DateTime(now.Year, now.Month, 1);
-            IMongoDatabase db = _mongoClient.GetDatabase("house_dev");
+            IMongoDatabase db = _mongoClient.GetDatabase("house");
             var powerPerHour = db.GetCollection<PerHourAggregate>("power_per_hour");
             var powerPrice = db.GetCollection<PowerPrice>("power_price_hour");
             
