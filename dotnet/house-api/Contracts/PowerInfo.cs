@@ -14,5 +14,6 @@ namespace HouseCore.Contracts{
         
         public double CurrentAverage {get;set;}
         public double HourPrognosis {get;set;}
+        public double CurrentHourPrice {get;set;}
     }
 }

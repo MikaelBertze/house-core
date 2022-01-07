@@ -17,9 +17,14 @@ namespace HouseCore.HouseService
             var dayStart = DateTime.Today;
             var now = DateTime.Now;
             var monthStart = new DateTime(now.Year, now.Month, 1);
-            IMongoDatabase db = _mongoClient.GetDatabase("house");
+            IMongoDatabase db = _mongoClient.GetDatabase("house_dev");
             var powerPerHour = db.GetCollection<PerHourAggregate>("power_per_hour");
+            var powerPrice = db.GetCollection<PowerPrice>("power_price_hour");
+            
             var powerDocs = powerPerHour.Find(x => x.Start >= monthStart.ToUniversalTime()).ToList();
+
+            var priceDocs = powerPrice.Find(x=> x.TimeStampDay == now.ToString("yyyy-MM-dd") && x.TimeStampHour == now.ToString("HH:00")).ToList();
+            Console.WriteLine(priceDocs.Count());
             var todayDocs = powerDocs.Where(x => x.StartLocalTime >= dayStart).ToList();
             var thisHour = todayDocs.SingleOrDefault(x => x.StartLocalTime.Hour == now.Hour);
             var preHour = todayDocs.SingleOrDefault(x => x.StartLocalTime.Hour == (now - TimeSpan.FromHours(1)).Hour);
@@ -46,6 +51,7 @@ namespace HouseCore.HouseService
                 MonthMaxHighLoadHour = maxHighLoadMonth?.StartLocalTime ?? DateTime.MinValue,
                 CurrentAverage = currentAverage,
                 HourPrognosis = (thisHour?.Consumption ?? 0) + ((1 - DateTime.Now.Minute/60.0) * (currentAverage / 1000)),
+                CurrentHourPrice = priceDocs.SingleOrDefault()?.Value??-9999
             };
         }
 
