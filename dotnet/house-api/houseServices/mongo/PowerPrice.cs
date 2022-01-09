@@ -3,6 +3,9 @@ using MongoDB.Bson.Serialization.Attributes;
 [BsonIgnoreExtraElements]
 public class PowerPrice 
 {
+    [BsonElement("ts")]
+    public DateTime Dt {get;set;}
+    
     [BsonElement("TimeStamp")]
     public string TimeStamp {get;set; } 
     [BsonElement("Value")]

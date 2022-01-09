@@ -13,7 +13,9 @@ app.UseSwagger();
 
 // endpoints
 app.MapGet("/powerinfo", () => { return new PowerService(mongoFactory()).GetInfo(); });
+app.MapGet("/powerpriceinfo", () => { return new PowerPriceService(mongoFactory()).GetInfo(); });
 app.MapGet("/waterinfo", () => { return new WaterService(mongoFactory()).GetInfo(); });
+app.MapGet("/temperaureInfo", () => { return new TemperatureService(mongoFactory()).GetInfo(); });
 
 
 
