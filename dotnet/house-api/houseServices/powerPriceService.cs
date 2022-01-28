@@ -13,29 +13,20 @@ namespace HouseCore.HouseService
             _mongoClient = mongoClient;
         }
 
-        public PowerPriceInfo GetInfo()
+        public PowerPriceInfo GetInfo(string date)
         {
-            var start = DateTime.Today.ToUniversalTime() - TimeSpan.FromDays(2);
-            var now = DateTime.UtcNow;
-            
             IMongoDatabase db = _mongoClient.GetDatabase("house");
             var powerPrice = db.GetCollection<PowerPrice>("power_price_hour");
-            var priceDocs = powerPrice.Find(x=> x.Dt >= start).SortBy(x => x.Dt).ToList();
             
-            var currentHourDoc = priceDocs.SingleOrDefault(pd => pd.Dt.Date == now.Date && pd.Dt.Hour == now.Hour);
-
+            Console.WriteLine(date);
+            var priceDocs = powerPrice.Find(x=> x.TimeStampDay == date).ToList();
+            
             return new PowerPriceInfo() {
                 PowerPriceHours = priceDocs.Select(pd => new PowerPriceHour { 
                     Date = pd.TimeStampDay,
-                    Hour = pd.Dt.ToLocalTime().Hour,
+                    Hour = DateTime.Parse(pd.TimeStamp).Hour,
                     Price = pd.Value,
                     }).ToArray(),
-
-                CurrentHour = new PowerPriceHour {
-                    Date = currentHourDoc.TimeStampDay,
-                    Hour = currentHourDoc.Dt.ToLocalTime().Hour,
-                    Price = currentHourDoc.Value
-                }
             };
         }
 

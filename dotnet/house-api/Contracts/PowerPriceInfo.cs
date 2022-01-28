@@ -10,6 +10,6 @@ namespace HouseCore.Contracts{
     public class PowerPriceInfo {
         
         public PowerPriceHour[] PowerPriceHours {get;set;}
-        public PowerPriceHour CurrentHour {get;set;}
+        //public PowerPriceHour CurrentHour {get;set;}
     }
 }
