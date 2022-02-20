@@ -14,7 +14,7 @@ def investigate_and_report():
     if prognosis > limit:
         # beep!
         print("sending alarm")
-        requests.get("http://alarmthingy.local/beep")
+        requests.get("http://192.168.50.80/beep")
     
 #schedule.every(2).seconds.do(job)
 
