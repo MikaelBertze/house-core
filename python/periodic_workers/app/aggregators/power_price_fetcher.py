@@ -45,7 +45,7 @@ def fetch():
     dt = datetime.now() # - timedelta(days=13)
     data = getData(dt)
     if dt.hour > 15:
-        dt = dt + timedelta(days=2)
+        dt = dt + timedelta(days=1)
         data = data + getData(dt)
 
 
