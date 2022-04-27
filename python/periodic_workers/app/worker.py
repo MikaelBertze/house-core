@@ -66,10 +66,10 @@ def fetch_power_price():
 
 schedule.every().minute.at(":00").do(aggregate_power)
 schedule.every().minute.at(":00").do(aggregate_water)
-schedule.every().hour.at("00:05").do(aggregate_power_previous_hour) # 5s in to avoid risk of execution at 59:59
-schedule.every().hour.at("00:05").do(aggregate_water_previous_hour) # 5s in to avoid risk of execution at 59:59
+schedule.every().hour.at("00:01").do(aggregate_power_previous_hour) # 5s in to avoid risk of execution at 59:59
+schedule.every().hour.at("00:01").do(aggregate_water_previous_hour) # 5s in to avoid risk of execution at 59:59
 schedule.every().minute.at(":00").do(over_usage_warning)
-schedule.every().hour.at("10:00").do(fetch_power_price) # 10 miniutes in. prices should update every day at 1500
+schedule.every().hour.at("00:10").do(fetch_power_price) # 10 miniutes in. prices should update every day at 1500
 
 # create schedule
 schedule.run_all()
