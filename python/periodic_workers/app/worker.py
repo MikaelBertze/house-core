@@ -6,6 +6,7 @@ from aggregators import power_aggregator
 from aggregators import power_price_fetcher
 from aggregators import water_aggregator
 from misc import power_warning
+from misc import shelly_trigger
 import schedule
 
 
@@ -64,12 +65,20 @@ def fetch_power_price():
     except Exception as ex:
         logging.exception(ex)
 
+def shelly():
+    try:
+        logging.info("shelly trigger")
+        shelly_trigger.investigate_and_set()
+    except Exception as ex:
+        logging.exception(ex)
+
 schedule.every().minute.at(":00").do(aggregate_power)
 schedule.every().minute.at(":00").do(aggregate_water)
 schedule.every().hour.at("00:01").do(aggregate_power_previous_hour) # 5s in to avoid risk of execution at 59:59
 schedule.every().hour.at("00:01").do(aggregate_water_previous_hour) # 5s in to avoid risk of execution at 59:59
 schedule.every().minute.at(":00").do(over_usage_warning)
 schedule.every().hour.at("00:10").do(fetch_power_price) # 10 miniutes in. prices should update every day at 1500
+schedule.every().minute.at(":00").do(shelly)
 
 # create schedule
 schedule.run_all()

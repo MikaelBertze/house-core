@@ -2,3 +2,4 @@ POWER_INFO_URL=https://blixtenmaskin.asuscomm.com/api/powerinfo
 POWER_WARNING_LIMIT=3.0
 DB_HOST=192.168.50.5
 DB_NAME='house_dev'
+CHARGE_PRICE_LIMIT=70
