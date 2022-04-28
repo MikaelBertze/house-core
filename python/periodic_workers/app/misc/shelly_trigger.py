@@ -15,4 +15,4 @@ def investigate_and_set():
         requests.get(f"{shelly_url}/rpc/Switch.Set?id={shelly_channel}&on=true")
     else:
         print("turning off")
-        requests.get("{shelly_url}/rpc/Switch.Set?id={shelly_channel}&on=false")
+        requests.get(f"{shelly_url}/rpc/Switch.Set?id={shelly_channel}&on=false")
