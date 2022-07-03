@@ -12,6 +12,11 @@ namespace HouseCore.HouseService
             _mongoClient = mongoClient;
         }
 
+        // public ChargeLimit GetShargeLimit()
+        // {
+        //     IMongoDatabase db = _mongoClient.GetDatabase("house");
+        //     db.GetCollection<
+        // }
         public PowerInfo GetInfo()
         {
             var dayStart = DateTime.Today;
@@ -24,7 +29,6 @@ namespace HouseCore.HouseService
             var powerDocs = powerPerHour.Find(x => x.Start >= monthStart.ToUniversalTime()).ToList();
 
             var priceDocs = powerPrice.Find(x=> x.TimeStampDay == now.ToString("yyyy-MM-dd") && x.TimeStampHour == now.ToString("HH:00")).ToList();
-            Console.WriteLine(priceDocs.Count());
             var todayDocs = powerDocs.Where(x => x.StartLocalTime >= dayStart).ToList();
             var thisHour = todayDocs.SingleOrDefault(x => x.StartLocalTime.Hour == now.Hour);
             var preHour = todayDocs.SingleOrDefault(x => x.StartLocalTime.Hour == (now - TimeSpan.FromHours(1)).Hour);
