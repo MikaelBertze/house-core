@@ -1,0 +1,75 @@
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        El
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <strong>Idag</strong>
+            <div>Nu: {{ powerInfo?.currentAverage | number : '1.0-0'}} W</div>
+            <div>El-pris: {{ powerInfo?.currentHourPrice ?? -9999 }} öre/kWh</div>
+            <div>Förbrukning: {{ powerInfo?.today ?? -9999 | number : '1.1-1'}} kWh</div>
+            <!-- <div>Högsta timme: {{ powerInfo.toda today.maxHour}} {{today.maxConsumption}} kWh</div> -->
+          </li>
+          <li class="list-group-item">
+            <strong>Denna månad</strong>
+            <div>Förbrukning: TODO kWh</div>
+            <div>Kostnad: TODO kr</div>
+            <div>Högsta höglast-timme: {{ date(powerInfo?.monthMaxHighLoadHour ?? "") | date:'yyyy-MM-dd HH'}}</div>
+            <div>Högsta förbrukning höglast: {{powerInfo?.monthMaxHighLoad | number : '1.2-2'}} kWh</div>
+            <div>Högsta låglast-timme: {{ date(powerInfo?.monthMaxHour ?? "") | date:'yyyy-MM-dd HH'}}</div>
+            <div>Högsta förbrukning låglast: {{ powerInfo?.monthMax | number : '1.2-2'}} kWh</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Vatten
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <strong>Denna timme</strong>
+            <div>Förbrukning: {{ waterInfo?.currentHour | number : '1.0-0'}} l</div>
+          </li>
+          <li class="list-group-item">
+            <strong>Idag</strong>
+            <div>Förbrukning: {{ waterInfo?.today | number : '1.0-0'}} l</div>
+          </li>
+          <li class="list-group-item">
+            <strong>Denna månad</strong>
+            <div>Förbrukning: {{ waterInfo?.month | number : '1.0-0'}} l</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="accordion-item">
+    <h2 class="accordion-header" id="headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Temperaturer
+      </button>
+    </h2>
+    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let temperature of temperatures">
+            <strong>{{ temperature.sensor }}</strong>
+            <div>{{ temperature.temperature | number : '1.1-1'}} °C</div>
+            <div>Dagens lägsta: {{ temperature.dayMin | number : '1.1-1'}} °C</div>
+            <div>Dagens högsta: {{ temperature.dayMax | number : '1.1-1'}} °C</div>
+            
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
