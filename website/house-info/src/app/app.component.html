@@ -44,6 +44,16 @@
           <li class="list-group-item">
             <strong>Idag</strong>
             <div>Förbrukning: {{ waterInfo?.today | number : '1.0-0'}} l</div>
+            <table style="width:100%">
+              <tr>
+                <th style="width:20%">Timme</th>
+                <th>Förbrukning (liter)</th>
+              </tr>
+              <tr *ngFor="let x of waterInfo?.hours">
+                <td>{{ x.hour }}</td>
+                <td>{{ x.consumption | number : '1.1-1'}}</td>
+              </tr>
+            </table>
           </li>
           <li class="list-group-item">
             <strong>Denna månad</strong>
