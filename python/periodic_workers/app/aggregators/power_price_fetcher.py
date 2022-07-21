@@ -65,6 +65,11 @@ def write_to_db(data):
     update = {'$set': data }
     db.power_price_hour.update_one(query, update, upsert=True)
 
+    # updating agregate documents
+    query = {'start':  data['ts']}
+    update = {'$set': { 'price': data['Value'] }}
+    db.power_per_hour.update_one(query, update, upsert=True)
+
 
 
 # Vattenfall

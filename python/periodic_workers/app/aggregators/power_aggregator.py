@@ -11,7 +11,7 @@ db = cnx[db_name]
 
 
 def aggregate(start_date, stop_date):
-
+    assert stop_date > start_date, "oups! cant stop before start..."
     data = list(db.power.find({'ts': {'$gt': start_date, '$lt': stop_date}}))
     powerdata = [((d['ts'] - start_date).total_seconds(), d['mean_effect']) for d in data]
     if len(powerdata) == 0:
@@ -25,7 +25,6 @@ def aggregate(start_date, stop_date):
 
     return usage
 
-
 def write_to_db(start_utc: datetime, stop_utc: datetime):
     agg = aggregate(start_utc, stop_utc)
     query = {'start': start_utc}
@@ -36,7 +35,6 @@ def write_to_db(start_utc: datetime, stop_utc: datetime):
                        'unit': 'kWh'
                        }
               }
-
     db.power_per_hour.update_one(query, update, upsert=True)
 
 
