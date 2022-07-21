@@ -20,6 +20,7 @@ namespace HouseCore.HouseService
         public PowerInfo GetInfo()
         {
             var dayStart = DateTime.Today;
+            var tomorrow = DateTime.Today + TimeSpan.FromDays(1);
             var now = DateTime.Now;
             var monthStart = new DateTime(now.Year, now.Month, 1);
             
@@ -29,7 +30,7 @@ namespace HouseCore.HouseService
             var powerDocs = powerPerHour.Find(x => x.Start >= monthStart.ToUniversalTime()).ToList();
 
             //var priceDocs = powerPrice.Find(x=> x.TimeStampDay == now.ToString("yyyy-MM-dd") && x.TimeStampHour == now.ToString("HH:00")).ToList();
-            var todayDocs = powerDocs.Where(x => x.StartLocalTime >= dayStart).ToList();
+            var todayDocs = powerDocs.Where(x => x.StartLocalTime >= dayStart && x.StartLocalTime < tomorrow).ToList();
             var thisHour = todayDocs.SingleOrDefault(x => x.StartLocalTime.Hour == now.Hour);
             var preHour = todayDocs.SingleOrDefault(x => x.StartLocalTime.Hour == (now - TimeSpan.FromHours(1)).Hour);
             var maxMonth = powerDocs.MaxBy(x => x.Consumption);
