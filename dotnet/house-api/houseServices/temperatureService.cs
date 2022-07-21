@@ -8,10 +8,10 @@ namespace HouseCore.HouseService
 {
     public class TemperatureService
     {
-        private IMongoClient _mongoClient;
-        public TemperatureService(IMongoClient mongoClient)
+        private IMongoDatabase _db;
+        public TemperatureService(IMongoDatabase db)
         {
-            _mongoClient = mongoClient;
+            _db = db;
         }
 
         public IEnumerable<TemperatureInfo> GetInfo()
@@ -21,8 +21,7 @@ namespace HouseCore.HouseService
             
             //var utcnow = now.ToUniversalTime();
             
-            IMongoDatabase db = _mongoClient.GetDatabase("house");
-            var temperatures = db.GetCollection<Temperature>("temperature");
+            var temperatures = _db.GetCollection<Temperature>("temperature");
             var data = temperatures.Find(x=> x.TimeStamp >= today - TimeSpan.FromDays(1)).ToList();
             var sensors = data.Select(d => d.SensorId).Distinct();
 

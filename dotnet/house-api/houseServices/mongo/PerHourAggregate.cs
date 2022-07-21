@@ -16,4 +16,7 @@ public class PerHourAggregate {
     public double Consumption {get;set;}
     [BsonElement("unit")]
     public string Unit {get;set;}
+    [BsonElement("price")]
+    public double Price {get;set;}
+
 }

@@ -6,10 +6,10 @@ namespace HouseCore.HouseService
 {
     public class WaterService
     {
-        private IMongoClient _mongoClient;
-        public WaterService(IMongoClient mongoClient)
+        private IMongoDatabase _db;
+        public WaterService(IMongoDatabase db)
         {
-            _mongoClient = mongoClient;
+            _db = db;
         }
 
         public WaterInfo GetInfo()
@@ -17,8 +17,7 @@ namespace HouseCore.HouseService
             var dayStart = DateTime.Today;
             var now = DateTime.Now;
             var monthStart = new DateTime(now.Year, now.Month, 1);
-            IMongoDatabase db = _mongoClient.GetDatabase("house");
-            var waterPerHour = db.GetCollection<PerHourAggregate>("water_per_hour");
+            var waterPerHour = _db.GetCollection<PerHourAggregate>("water_per_hour");
             var waterDocs = waterPerHour.Find(x => x.Start >= monthStart.ToUniversalTime()).ToList();
             var todayDocs = waterDocs.Where(x => x.StartLocalTime >= dayStart).ToList();
             var thisHour = todayDocs.SingleOrDefault(x => x.StartLocalTime.Hour == now.Hour);
@@ -40,8 +39,7 @@ namespace HouseCore.HouseService
 
         public WaterInfos GetInfos(DateOnly date)
         {
-            IMongoDatabase db = _mongoClient.GetDatabase("house");
-            var waterPerHour = db.GetCollection<PerHourAggregate>("water_per_hour");
+            var waterPerHour = _db.GetCollection<PerHourAggregate>("water_per_hour");
             var waterDocs = waterPerHour.Find(x => 
                 x.Start >= date.ToDateTime(new TimeOnly(0, 0)).ToUniversalTime()
                 && x.Start <= date.ToDateTime(new TimeOnly(0, 0)).ToUniversalTime() + TimeSpan.FromDays(1)

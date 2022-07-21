@@ -4,6 +4,7 @@ namespace HouseCore.Contracts{
         public double PreviousHour {get;set;}
 
         public double Today {get;set;}
+        public double MonthConsumption {get;set;}
         public double TodayMax {get;set;}
         public DateTime TodayMaxHour {get;set;}
         public double MonthMax {get;set;}

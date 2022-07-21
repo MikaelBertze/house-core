@@ -18,8 +18,8 @@ builder.Services.AddSignalR()
 // });
 
 var app = builder.Build();
-
-var mongoFactory = () => { return new MongoClient("mongodb://192.168.50.5:27017"); };
+var database = app.Configuration.GetValue<string>("Database");
+var mongoFactory = () => { return new MongoClient("mongodb://192.168.50.5:27017").GetDatabase(database); };
 
 app.MapHub<HouseHub>("/signalr/house-hub");
 

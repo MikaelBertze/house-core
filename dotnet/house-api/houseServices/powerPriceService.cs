@@ -7,16 +7,15 @@ namespace HouseCore.HouseService
 {
     public class PowerPriceService
     {
-        private IMongoClient _mongoClient;
-        public PowerPriceService(IMongoClient mongoClient)
+        private IMongoDatabase _db;
+        public PowerPriceService(IMongoDatabase db)
         {
-            _mongoClient = mongoClient;
+            _db = db;
         }
 
         public PowerPriceInfo GetInfo(string date)
         {
-            IMongoDatabase db = _mongoClient.GetDatabase("house");
-            var powerPrice = db.GetCollection<PowerPrice>("power_price_hour");
+            var powerPrice = _db.GetCollection<PowerPrice>("power_price_hour");
             
             Console.WriteLine(date);
             var priceDocs = powerPrice.Find(x=> x.TimeStampDay == date).ToList();
@@ -33,8 +32,7 @@ namespace HouseCore.HouseService
         private double AverageConsumption(int seconds)
         {
             var t = DateTime.Now - TimeSpan.FromSeconds(seconds);
-            IMongoDatabase db = _mongoClient.GetDatabase("house");
-            var power = db.GetCollection<Power>("power");
+            var power = _db.GetCollection<Power>("power");
             
             var documents = power.Find(x => x.Time >= t).ToList();
             if (documents.Any())
