@@ -8,7 +8,7 @@ shelly_url = os.environ['SHELLY_URL']
 shelly_channel = os.environ['SHELLY_CHANNEL']
 
 def investigate_and_set():
-    data = requests.get(url).json()
+    data = requests.get(url, verify=False).json()
     print(data['currentHourPrice'])
     if data['currentHourPrice'] <= limit:
         print("turning on")
