@@ -1,19 +1,30 @@
 
 
 export class PowerInfo {
-    currentHour: number
-    previousHour: number
-    today: number
-    todayMax: number
-    todayMaxHour: string
-    monthMax: number
-    monthMaxHour: string
-    monthMaxHighLoad: number
-    monthMaxHighLoadHour: string
+    
+    currentHour: AccumulatedPowerInfo
+    currentDay: AccumulatedPowerInfo
+    currentMonth: AccumulatedPowerInfo
+
+    currentDayMax: MaxPowerConsumptionInfo
+    currentMonthMax: MaxPowerConsumptionInfo
+    currentMonthHighLoadMax: MaxPowerConsumptionInfo
+    
     currentAverage: number
     hourPrognosis: number
     currentHourPrice: number
 }
+
+export class AccumulatedPowerInfo {
+    consumption: number
+    cost: number
+}
+export class MaxPowerConsumptionInfo
+{
+    consumption: number
+    pointInTime: string
+}
+
 
 export class WaterInfo {
     currentHour: number

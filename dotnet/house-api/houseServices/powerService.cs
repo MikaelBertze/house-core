@@ -46,16 +46,36 @@ namespace HouseCore.HouseService
             var currentAverage = AverageConsumption(60);
 
             return new PowerInfo() { 
-                CurrentHour = thisHour?.Consumption ?? -1,
-                Today = todayDocs.Sum(x => x.Consumption),
-                MonthConsumption = monthConsumption,
-                PreviousHour = preHour?.Consumption ?? -1,
-                TodayMax = todayMax?.Consumption ?? -1,
-                TodayMaxHour = todayMax?.StartLocalTime ?? DateTime.MinValue,
-                MonthMax = maxMonth?.Consumption ?? -1,
-                MonthMaxHour = maxMonth?.StartLocalTime ?? DateTime.MinValue,
-                MonthMaxHighLoad = maxHighLoadMonth?.Consumption ?? -1,
-                MonthMaxHighLoadHour = maxHighLoadMonth?.StartLocalTime ?? DateTime.MinValue,
+                CurrentHour = new AccumulatedPowerInfo
+                {
+                    Consumption = thisHour != null ? thisHour.Consumption : -1,
+                    Cost = thisHour != null ? thisHour.Consumption * thisHour.Price_SEK : 0
+                },
+                CurrentDay = new AccumulatedPowerInfo
+                {
+                    Consumption = todayDocs.Sum(x => x.Consumption),
+                    Cost = todayDocs.Sum(x => x.Consumption * x.Price_SEK)
+                },
+                CurrentMonth = new AccumulatedPowerInfo
+                {
+                    Consumption = powerDocs.Sum(x => x.Consumption),
+                    Cost = powerDocs.Sum(x => x.Consumption * x.Price_SEK)
+                },
+                CurrentDayMax = new MaxPowerConsumptionInfo
+                {
+                    Consumption = todayMax.Consumption,
+                    PointInTime = todayMax.StartLocalTime,
+                },
+                CurrentMonthMax = new MaxPowerConsumptionInfo
+                {
+                    Consumption = maxMonth.Consumption,
+                    PointInTime = maxMonth.StartLocalTime,
+                },
+                CurrentMonthHighLoadMax = new MaxPowerConsumptionInfo
+                {
+                    Consumption = maxHighLoadMonth.Consumption,
+                    PointInTime = maxHighLoadMonth.StartLocalTime,
+                },
                 CurrentAverage = currentAverage,
                 HourPrognosis = (thisHour?.Consumption ?? 0) + ((1 - DateTime.Now.Minute/60.0) * (currentAverage / 1000)),
                 CurrentHourPrice = thisHour?.Price??-9999

@@ -18,5 +18,6 @@ public class PerHourAggregate {
     public string Unit {get;set;}
     [BsonElement("price")]
     public double Price {get;set;}
+    public double Price_SEK => Price / 100;
 
 }

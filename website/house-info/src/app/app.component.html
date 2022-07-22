@@ -12,17 +12,17 @@
             <strong>Idag</strong>
             <div>Nu: {{ powerInfo?.currentAverage | number : '1.0-0'}} W</div>
             <div>El-pris: {{ powerInfo?.currentHourPrice ?? -9999 }} öre/kWh</div>
-            <div>Förbrukning: {{ powerInfo?.today ?? -9999 | number : '1.1-1'}} kWh</div>
+            <div>Förbrukning: {{ powerInfo?.currentDay?.consumption ?? -9999 | number : '1.1-1'}} kWh</div>
             <!-- <div>Högsta timme: {{ powerInfo.toda today.maxHour}} {{today.maxConsumption}} kWh</div> -->
           </li>
           <li class="list-group-item">
             <strong>Denna månad</strong>
-            <div>Förbrukning: TODO kWh</div>
-            <div>Kostnad: TODO kr</div>
-            <div>Högsta höglast-timme: {{ date(powerInfo?.monthMaxHighLoadHour ?? "") | date:'yyyy-MM-dd HH'}}</div>
-            <div>Högsta förbrukning höglast: {{powerInfo?.monthMaxHighLoad | number : '1.2-2'}} kWh</div>
-            <div>Högsta låglast-timme: {{ date(powerInfo?.monthMaxHour ?? "") | date:'yyyy-MM-dd HH'}}</div>
-            <div>Högsta förbrukning låglast: {{ powerInfo?.monthMax | number : '1.2-2'}} kWh</div>
+            <div>Förbrukning: {{powerInfo?.currentMonth?.consumption | number : '1.0-0'}} kWh</div>
+            <div>Kostnad: {{powerInfo?.currentMonth?.cost | number : '1.0-0'}} kr</div>
+            <div>Högsta höglast-timme: {{ date(powerInfo?.currentMonthHighLoadMax?.pointInTime ?? "") | date:'yyyy-MM-dd HH'}}</div>
+            <div>Högsta förbrukning höglast: {{powerInfo?.currentMonthHighLoadMax?.consumption | number : '1.2-2'}} kWh</div>
+            <div>Högsta låglast-timme: {{ date(powerInfo?.currentMonthMax?.pointInTime ?? "") | date:'yyyy-MM-dd HH'}}</div>
+            <div>Högsta förbrukning låglast: {{ powerInfo?.currentMonthMax?.consumption | number : '1.2-2'}} kWh</div>
           </li>
         </ul>
       </div>
