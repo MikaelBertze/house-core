@@ -62,6 +62,21 @@ def on_message(client, userdata, message):
         data = (str(message.payload.decode("utf-8")),)
         db.iot_status.insert_one({'message' : data, 'ts': datetime.now()})
     
+    if message.topic.startswith("shelly/status/switch"):
+        try:
+            shelly_data = json.loads(str(message.payload.decode("utf-8")))
+
+            data = {
+                "ts": datetime.now(),
+                "location": "MorKarin",
+                "switch": shelly_data['id'],
+                "mean_effect": shelly_data['aenergy']['by_minute'][0] * 60 / 1000
+            }
+            db.shelly.insert_one(data)
+        except:
+            print("error in shelly report")
+            print(str(message.payload.decode("utf-8")))
+            return    
 
 def on_disconnect(client, userdata, rc):
     print("disconnecting reason  "  +str(rc))

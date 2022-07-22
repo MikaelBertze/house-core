@@ -33,5 +33,6 @@ db.createCollection("temperature", { timeseries: { timeField: "ts" } } )
 db.createCollection("power", { timeseries: { timeField: "ts" } } )
 db.createCollection("water", { timeseries: { timeField: "ts" } } )
 db.createCollection("ftx", { timeseries: { timeField: "ts" } } )
+db.createCollection("shelly", { timeseries: { timeField: "ts" } } )
 
 ```
