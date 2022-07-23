@@ -3,6 +3,7 @@ import time
 import logging
 from datetime import datetime, timedelta
 from aggregators import power_aggregator
+from aggregators import shelly_aggregator
 from aggregators import power_price_fetcher
 from aggregators import water_aggregator
 from misc import power_warning
@@ -28,6 +29,24 @@ def aggregate_power_previous_hour():
         end = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
         start = end - timedelta(hours=1)
         power_aggregator.write_to_db(start, end)
+    except Exception as ex:
+        logging.exception(ex)
+
+def aggregate_shelly():
+    try:
+        logging.info("Aggregate shelly")
+        start = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
+        end = datetime.utcnow()
+        shelly_aggregator.write_to_db(start, end)
+    except Exception as ex:
+        logging.exception(ex)
+
+def aggregate_shelly_previous_hour():
+    try:
+        logging.info("Aggregate power previous hour")
+        end = datetime.utcnow().replace(minute=0, second=0, microsecond=0)
+        start = end - timedelta(hours=1)
+        shelly_aggregator.write_to_db(start, end)
     except Exception as ex:
         logging.exception(ex)
 
